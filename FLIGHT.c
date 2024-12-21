@@ -1,3 +1,4 @@
+//Program to implement flight information system
 #include<stdio.h>
 #include<stdlib.h>
 #include <string.h>
@@ -16,8 +17,8 @@ struct Flight
 struct city
 {
     char cities[20]; 
-}c[7];
-//Creating a prototype for function
+}city_list[7];
+//Creating prototypes for function
 void displayallflights();
 void displaysource();    
 void displaysourcetodesination();   
@@ -50,11 +51,9 @@ int main()
             }
         }
     }
-
-    
     i=0;
     //reading city details from csv file
-    while (fscanf(fp2, "%s", c[i].cities) == 1) 
+    while (fscanf(fp2, "%s", city_list[i].cities) == 1) 
     {
         i++;
         if (i == 7) 
@@ -65,16 +64,20 @@ int main()
     //closing files
     fclose(fp);
     fclose(fp2);
-    //Letting user selct option
+    //Asking user to select option
     do
     {
         printf("Select a option\n");
         printf("1.To check all the flights available.\n");
         printf("2.To check all the flights from once place.\n");
-        printf("3.To check all the flights from place to another place.\n");
+        printf("3.To check all the flights from one place to another place.\n");
         printf("4.To exit\n");
-
-        scanf("%d",&choice);
+    //To verify user is giving option in intergers
+        while((scanf("%d",&choice)!=1))
+        {
+            while(getchar()!='\n');
+            printf("Error in option ,Please type respective option.\n");
+        }
         switch(choice)
         {
             case 1:displayallflights();
@@ -90,6 +93,7 @@ int main()
     } while (choice!=4);
     return 0;   
 }
+//function to display all flights
 void displayallflights()
 {
     //Displaying all flights
@@ -111,6 +115,7 @@ void displayallflights()
     }
     printf("\n");
 }
+//function to display a flight from user given source
 void displaysource()
 {
     int option;
@@ -119,15 +124,20 @@ void displaysource()
     printf("Select the source\n");
     for(int i=0;i<7;i++)
     {
-        printf("%d.%s\n",i+1,c[i].cities);
+        printf("%d.%s\n",i+1,city_list[i].cities);
     }   
-    scanf("%d",&option);
+    //To verify user is giving option in intergers
+    while((scanf("%d",&option)!=1))
+    {
+        while(getchar()!='\n');
+        printf("Error in option ,Please type respective option.\n");
+    }
     if(option>=8)
     {
         printf("Please Enter different source\n");
         goto jump_here1;
     }
-    printf("%s\n",c[option-1].cities);
+    printf("%s\n",city_list[option-1].cities);
     //Displaying all flights from selected source
     printf("%-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", "Flight ID", "Source", "Arrival", "Destination", "Departure", "Time", "Fare");
     for(int j=0;j<75;j++)
@@ -138,7 +148,7 @@ void displaysource()
     //Display flights
     for(int i=0;i<20;i++)
     {
-        if(strcmp(c[option-1].cities,flights[i].source)==0)
+        if(strcmp(city_list[option-1].cities,flights[i].source)==0)
         {
             printf("%-10s %-10s %-10s %-10s %-10s %-10.2f %-10.2f \n",
                     flights[i].flightID, flights[i].source, flights[i].arrivalTime,
@@ -151,6 +161,7 @@ void displaysource()
     }
         printf("\n");
 }    
+//function to display flights from user given source and destination
 void displaysourcetodesination()
 {
     int option,option1,verify=0;
@@ -160,24 +171,34 @@ void displaysourcetodesination()
     printf("Select the source\n");
     for(int i=0;i<7;i++)
     {
-        printf("%d.%s\n",i+1,c[i].cities);
+        printf("%d.%s\n",i+1,city_list[i].cities);
     }   
-    scanf("%d",&option);
-    printf("%s\n",c[option-1].cities);
+    //To verify user is giving option in intergers
+    while((scanf("%d",&option)!=1))
+    {
+        while(getchar()!='\n');
+        printf("Error in option ,Please type respective option.\n");
+    }
+    printf("%s\n",city_list[option-1].cities);
     //Asking user to select destination
     printf("Select the destination\n");
     for(int i=0;i<7;i++)
     {
-        if(strcmp(c[option-1].cities,c[i].cities)==0)
+        if(strcmp(city_list[option-1].cities,city_list[i].cities)==0)
         {
             continue;
         }
-        printf("%d.%s\n",i+1,c[i].cities);   
+        printf("%d.%s\n",i+1,city_list[i].cities);   
     }   
-    scanf("%d",&option1);
-    printf("%s\n",c[option1-1].cities);
+    //To verify user is giving option in intergers
+    while((scanf("%d",&option1)!=1))
+    {
+        while(getchar()!='\n');
+        printf("Error in option ,Please type respective option.\n");
+    }
+    printf("%s\n",city_list[option1-1].cities);
     //Asking user to select different destination 
-    if(c[option-1].cities==c[option1-1].cities||option1>=8||option>=8)
+    if(city_list[option-1].cities==city_list[option1-1].cities||option1>=8||option>=8)
     {
         printf("Please Enter different destination\n");
         goto jump_here2;
@@ -193,7 +214,7 @@ void displaysourcetodesination()
     //Display flights
     for(int i=0;i<20;i++)
     {
-        if(strcmp(c[option-1].cities,flights[i].source)==0 && strcmp(c[option1-1].cities,flights[i].destination)==0)
+        if(strcmp(city_list[option-1].cities,flights[i].source)==0 && strcmp(city_list[option1-1].cities,flights[i].destination)==0)
         {
             verify=1;
             printf("%-10s %-10s %-10s %-10s %-10s %-10.2f %-10.2f \n",
@@ -204,7 +225,7 @@ void displaysourcetodesination()
     //Displaying no direct files if not available
     if(verify==0)
     {
-        printf("\t\tNO DIRECT FLIGHTS ):\n");
+        printf("\t\t\tNO DIRECT FLIGHTS ):\n");
     }        
     for(int j=0;j<75;j++)
     {
@@ -213,7 +234,7 @@ void displaysourcetodesination()
     printf("\n\n");
     verify=0;
     //Displaying Indirect flights
-     printf("%40s\n","INDIRECT FLIGHTS");
+    printf("%40s\n","INDIRECT FLIGHTS");
     printf("%-10s %-10s %-10s %-10s %-10s %-10s %-10s\n", "Flight ID", "Source", "Arrival", "Destination", "Departure", "Time", "Fare");
     for(int j=0;j<75;j++)
     {
@@ -224,7 +245,7 @@ void displaysourcetodesination()
     for(int i=0;i<20;i++)
     for(int j=0;j<20;j++)
     {
-        if(strcmp(c[option-1].cities,flights[i].source)==0 && strcmp(flights[j].source,flights[i].destination)==0 && strcmp(c[option1-1].cities,flights[j].destination)==0)
+        if(strcmp(city_list[option-1].cities,flights[i].source)==0 && strcmp(flights[j].source,flights[i].destination)==0 && strcmp(city_list[option1-1].cities,flights[j].destination)==0)
         {
             verify=1;
             printf("%s","**FLIGHT 1**\n\n");
@@ -250,7 +271,7 @@ void displaysourcetodesination()
     //Displaying no Indirect files if not available
     if(verify==0)
     {
-        printf("\t\tNO INDIRECT FLIGHTS ):\n");
+        printf("\t\t\tNO INDIRECT FLIGHTS ):\n");
         for(int j=0;j<75;j++)
         {
             printf("-");
